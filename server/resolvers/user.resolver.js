@@ -1,24 +1,26 @@
 import { users } from "../dunmmyData/data.js";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import Transaction from "../models/transcationModel.js";
 
 const userResolver = {
   Mutation: {
-    singup: async (_, { input }, context) => {
+    signUp: async (_, { input }, context) => {
       try {
         const { username, name, password, gender } = input;
+        console.log("test singup", username);
         if (!username || !name || !password || !gender) {
           throw new Error("All fields are required");
         }
 
-        const existingUser = await User.findOne(username);
-
+        console.log("test singup", username, User);
+        const existingUser = await User.findOne({ username });
+        console.log("test existingUser", username, existingUser);
         if (existingUser) {
           throw new Error("User already exists");
         }
-        const salt = await bcrypt.salt(10);
-
-        const hashedPassword = bcrypt.hash(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         let genderVal = gender === "male" ? "boy" : "girl";
 
@@ -69,12 +71,36 @@ const userResolver = {
   },
 
   Query: {
-    users: () => users,
-    user: (_, { userId }) => {
-      return users.find((user) => user._id === userId);
+    authUser: async (_, __, context) => {
+      try {
+        const user = await context.getUser();
+        return user;
+      } catch (err) {
+        console.error("Error in authUser: ", err);
+        throw new Error("Internal server error");
+      }
+    },
+    user: async (_, { userId }) => {
+      try {
+        const user = await User.findById(userId);
+        return user;
+      } catch (err) {
+        console.error("Error in user query:", err);
+        throw new Error(err.message || "Error getting user");
+      }
     },
   },
-  Mutation: {},
+  User: {
+    transactions: async (parent) => {
+      try {
+        const transactions = await Transaction.find({ userId: parent._id });
+        return transactions;
+      } catch (err) {
+        console.log("Error in user.transactions resolver: ", err);
+        throw new Error(err.message || "Internal server error");
+      }
+    },
+  },
 };
 
 export default userResolver;

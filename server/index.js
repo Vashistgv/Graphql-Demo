@@ -68,9 +68,9 @@ async function startServer() {
   // Set up our Express middleware to handle CORS, body parsing,
   // and our expressMiddleware function.
   app.use(
-    "/",
+    "/graphql",
     cors({
-      origin: "https://localhost:3000", // to allow front end crosssite url
+      origin: "https://localhost:3000/", // to allow front end crosssite url
       credentials: true,
     }),
     express.json(),
@@ -84,7 +84,7 @@ async function startServer() {
   // Modified server startup
   await new Promise((resolve) => httpServer.listen({ port: 8000 }, resolve));
 
-  console.log(`🚀 Server ready at http://localhost:8000/`);
+  console.log(`🚀 Server ready at http://localhost:8000/graphql`);
   // connect to mongo DB
 
   await connectDB();
