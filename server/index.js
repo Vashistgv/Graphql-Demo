@@ -14,7 +14,7 @@ import passport from "passport";
 import session from "express-session";
 import connectMongo from "connect-mongodb-session";
 import { buildContext } from "graphql-passport";
-import { configPassowrd } from "./passport/passportConfig.js";
+import { configurePassport } from "./passport/passportConfig.js";
 
 dotenv.config();
 
@@ -22,7 +22,7 @@ async function startServer() {
   // initialize express
   const app = express();
   // trigger passport to validate user
-  configPassowrd();
+  configurePassport();
 
   // apollo httpServer handles incoming requests to our Express app.
   // Below, we tell Apollo Server to "drain" this httpServer,
@@ -70,7 +70,7 @@ async function startServer() {
   app.use(
     "/graphql",
     cors({
-      origin: "https://localhost:3000/", // to allow front end crosssite url
+      origin: "https://localhost:3000", // to allow front end crosssite url
       credentials: true,
     }),
     express.json(),

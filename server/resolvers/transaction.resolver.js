@@ -7,8 +7,10 @@ const transactionResolver = {
       try {
         if (!context.getUser()) throw new Error("Unauthorized");
         const userId = await context.getUser()._id;
-
+        console.log("userId", userId);
         const transactions = await Transaction.find({ userId });
+        console.log("userId", transactions);
+
         return transactions;
       } catch (err) {
         console.error("Error getting transactions:", err);
@@ -58,6 +60,7 @@ const transactionResolver = {
   Mutation: {
     createTransaction: async (_, { input }, context) => {
       try {
+        console.log("context.getUser()._id,", context.getUser());
         const newTransaction = new Transaction({
           ...input,
           userId: context.getUser()._id,

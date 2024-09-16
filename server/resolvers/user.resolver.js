@@ -40,17 +40,20 @@ const userResolver = {
         return newUser;
       } catch (error) {
         console.log("Error in singup ", error);
+        throw new Error("Error in singup", error);
       }
     },
     login: async (_, { input }, context) => {
       try {
         const { username, password } = input;
+        console.log("username ", username);
         if (!username || !password)
           throw new Error("Please Enter UserDetails ");
         const { user } = await context.authenticate("graphql-local", {
           username,
           password,
         });
+        console.log("username user");
         await context.login(user);
         return user;
       } catch (error) {}
@@ -66,6 +69,7 @@ const userResolver = {
         return { message: "Logged out successfully" };
       } catch (error) {
         console.log("Error in logout", error);
+        throw new Error(err.message || "Internal server error");
       }
     },
   },
@@ -74,6 +78,7 @@ const userResolver = {
     authUser: async (_, __, context) => {
       try {
         const user = await context.getUser();
+        console.log("user", user);
         return user;
       } catch (err) {
         console.error("Error in authUser: ", err);

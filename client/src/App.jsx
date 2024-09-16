@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -18,10 +18,28 @@ function App() {
     <>
       {data?.authUser && <Header />}
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/HomePage" element={<HomePage />} />
-        <Route path="/transaction/:id" element={<TransactionPage />} />
+        <Route
+          path="/"
+          element={data?.authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={data?.authUser ? <Navigate to="/" /> : <LoginPage />}
+        />
+        <Route
+          path="/signup"
+          element={data?.authUser ? <Navigate to="/" /> : <SignUpPage />}
+        />
+        <Route
+          path="/HomePage"
+          element={data?.authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/transaction/:id"
+          element={
+            data?.authUser ? <TransactionPage /> : <Navigate to="/login" />
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />

@@ -4,10 +4,12 @@ import RadioButton from "../components/RadioButton";
 import InputField from "../components/InputField";
 import { useMutation } from "@apollo/client";
 import { SIGN_UP } from "../graphql/mutations/userMutation";
-import { Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 const SignUpPage = () => {
-  const [triggerSingUp, { loading, error }] = useMutation(SIGN_UP);
+  const [triggerSingUp, { loading, error }] = useMutation(SIGN_UP, {
+    refetchQueries: ["GetAuthenticatedUser"],
+  });
 
   const [signUpData, setSignUpData] = useState({
     name: "",
@@ -40,9 +42,10 @@ const SignUpPage = () => {
           input: signUpData,
         },
       });
+      toast.success("Successfully Created USER");
     } catch (error) {
       console.log("Error in singup...", error);
-      Toaster.error("Error in singup");
+      toast.error("Error in singup");
     }
     console.log(signUpData);
   };

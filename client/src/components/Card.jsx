@@ -13,14 +13,14 @@ const categoryColorMap = {
   // Add more categories and corresponding color classes as needed
 };
 
-const VCard = ({ cardType }) => {
+const VCard = ({ cardType, cardDetails }) => {
   const cardClass = categoryColorMap[cardType];
 
   return (
     <div className={`rounded-md p-4 bg-gradient-to-br ${cardClass}`}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-row items-center justify-between">
-          <h2 className="text-lg font-bold text-white">Saving</h2>
+          <h2 className="text-lg font-bold text-white">{cardType}</h2>
           <div className="flex items-center gap-2">
             <FaTrash className={"cursor-pointer"} />
             <Link to={`/transaction/123`}>
@@ -30,19 +30,19 @@ const VCard = ({ cardType }) => {
         </div>
         <p className="text-white flex items-center gap-1">
           <BsCardText />
-          Description: Salary
+          {`Description: ${cardDetails?.description || ""}`}
         </p>
         <p className="text-white flex items-center gap-1">
           <MdOutlinePayments />
-          Payment Type: Cash
+          {`Payment Type: ${cardDetails?.paymentType}`}
         </p>
         <p className="text-white flex items-center gap-1">
           <FaSackDollar />
-          Amount: $150
+          {`Amount: ${cardDetails?.amount || "$"}`}
         </p>
         <p className="text-white flex items-center gap-1">
           <FaLocationDot />
-          Location: New York
+          {`Location: ${cardDetails?.location || ""}`}
         </p>
         <div className="flex justify-between items-center">
           <p className="text-xs text-black font-bold">21 Sep, 2001</p>
